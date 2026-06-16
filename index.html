@@ -27,8 +27,8 @@
 
     /* ゲーム画面は固定 */
     #game-screen {
-      height: 100dvh;
-      max-height: 100dvh;
+      height: 100vh;
+      max-height: 100vh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -619,7 +619,7 @@ function App() {
   ];
 
   if (screen === 'title') return (
-    <div className="min-h-dvh flex flex-col items-center justify-center p-5">
+    <div className="min-h-screen flex flex-col items-center justify-center p-5">
       <div className="w-full max-w-sm">
         <div className="text-center mb-7">
           <div className="text-5xl mb-2">🏃‍♂️</div>
@@ -663,7 +663,7 @@ function App() {
 
   // ===================== 設定画面 =====================
   if (screen === 'settings') return (
-    <div className="min-h-dvh flex flex-col items-center p-4 pb-8">
+    <div className="min-h-screen flex flex-col items-center p-4 pb-8">
       <div className="w-full max-w-md">
         <div className="flex items-center gap-3 mb-5 pt-2">
           <button type="button" onClick={() => setScreen('title')}
@@ -816,7 +816,7 @@ function App() {
 
   // ===================== ゲームオーバー画面 =====================
   if (screen === 'gameover') return (
-    <div className="min-h-dvh flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-[32px] shadow-lg border-2 border-amber-100 p-8 w-full max-w-sm text-center">
         {isCleared ? (
           <>
@@ -854,4 +854,3 @@ root.render(<App />);
 </script>
 </body>
 </html>
-
