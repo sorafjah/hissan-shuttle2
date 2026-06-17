@@ -18,50 +18,54 @@ html,body{
 }
 button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
-/* ===== 画面共通 ===== */
 .screen{display:none;width:100vw;height:100vh;overflow:hidden;}
 .screen.active{display:flex;flex-direction:column;}
 
 /* ===== タイトル ===== */
 #screen-title{
   align-items:center;justify-content:center;
-  overflow-y:auto;padding:20px 16px 32px;
+  overflow-y:auto;padding:16px 16px 28px;
 }
 .title-inner{width:100%;max-width:360px;}
-.title-logo{text-align:center;margin-bottom:24px;}
-.title-logo .emoji{font-size:3rem;}
-.title-logo h1{font-size:1.6rem;font-weight:700;color:#d97706;margin-top:4px;}
+.title-logo{text-align:center;margin-bottom:20px;}
+.title-logo .emoji{font-size:2.6rem;}
+.title-logo h1{font-size:1.5rem;font-weight:700;color:#d97706;margin-top:4px;}
 
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.mode-btn{
-  padding:14px 8px;border-radius:18px;font-weight:700;color:#fff;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  font-size:1rem;border:3px solid transparent;
-  transition:transform .12s,opacity .12s;
-  box-shadow:0 4px 12px rgba(0,0,0,.12);
+/* 速度選択 */
+.speed-row{display:flex;gap:8px;margin-bottom:14px;}
+.speed-btn{
+  flex:1;padding:10px 4px;border-radius:14px;font-weight:700;font-size:.85rem;
+  border:2px solid #d1d5db;color:#64748b;background:#f8fafc;
+  transition:all .12s;text-align:center;
 }
-.mode-btn:active{transform:scale(.96);}
-.mode-btn.selected{border-color:#fff;transform:scale(1.04);opacity:1;}
-.mode-btn:not(.selected){opacity:.75;}
-.mode-btn .sub{font-size:1.3rem;line-height:1;}
+.speed-btn.on{border-color:#84cc16;color:#3f6212;background:#f7fee7;}
 
-.mode-plus    {background:linear-gradient(160deg,#38bdf8,#0284c7);}
-.mode-minus   {background:linear-gradient(160deg,#f87171,#dc2626);}
-.mode-plusminus{background:linear-gradient(160deg,#a78bfa,#7c3aed);}
-.mode-times   {background:linear-gradient(160deg,#34d399,#059669);}
-.mode-dandan  {background:linear-gradient(160deg,#fbbf24,#f97316);}
+/* モードグリッド: 3列×2行 */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.mode-btn{
+  padding:12px 4px;border-radius:16px;font-weight:700;color:#fff;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-size:.85rem;border:3px solid transparent;
+  transition:transform .12s,opacity .12s;
+  background:#38bdf8;
+  box-shadow:0 2px 8px rgba(56,189,248,.3);
+}
+.mode-btn:active{transform:scale(.95);}
+.mode-btn.selected{border-color:#84cc16;transform:scale(1.05);opacity:1;}
+.mode-btn:not(.selected){opacity:.72;}
+.mode-btn .sub{font-size:1.1rem;line-height:1;}
 
-.start-row{display:flex;gap:10px;}
+/* スタート行 */
+.start-row{display:flex;align-items:center;gap:10px;}
 .btn-start{
   flex:1;padding:16px;background:#f59e0b;color:#fff;
   font-size:1.4rem;font-weight:700;border-radius:18px;
   box-shadow:0 4px 0 #b45309;transition:transform .1s,box-shadow .1s;
 }
-.btn-start:active{transform:translateY(4px);box-shadow:0 0 0 #b45309;}
-.btn-settings{
-  padding:14px 18px;background:#fff;color:#64748b;
-  font-size:0.85rem;font-weight:700;border-radius:18px;
-  border:2px solid #e2e8f0;line-height:1.3;text-align:center;
+.btn-start:active{transform:translateY(4px);box-shadow:none;}
+.btn-gear-title{
+  font-size:1.8rem;padding:8px;background:none;border:none;
+  line-height:1;opacity:.6;
 }
 
 /* ===== 設定 ===== */
@@ -92,8 +96,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .toggle-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .toggle-btn{
   padding:8px 4px;border-radius:12px;font-weight:700;font-size:.75rem;
-  border:2px solid #e2e8f0;color:#94a3b8;background:#f8fafc;
-  transition:all .12s;
+  border:2px solid #e2e8f0;color:#94a3b8;background:#f8fafc;transition:all .12s;
 }
 .toggle-btn.on{border-color:#f59e0b;color:#b45309;background:#fffbeb;}
 
@@ -130,7 +133,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   box-shadow:0 8px 32px rgba(180,160,140,.12);border:1px solid rgba(251,191,36,.2);
 }
 
-/* 筆算グリッド */
 .hissan-grid{display:grid;}
 .hissan-cell{
   display:flex;align-items:center;justify-content:center;
@@ -141,7 +143,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .hissan-cell.hint-val{font-size:1.1rem;font-weight:700;color:#10b981;height:22px;}
 .hissan-divider{grid-column:1/-1;height:4px;background:#2D334E;border-radius:2px;margin:2px 0;}
 
-/* スラッシュ */
 .slash-wrap{position:relative;display:inline-block;}
 .slash-wrap .slashed{color:#d1d5db;}
 .slash-line{
@@ -151,7 +152,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   border-radius:1px;pointer-events:none;
 }
 
-/* ドラム */
+/* ドラム — 色付けなし */
 .drum-wrap{
   position:relative;width:60px;height:72px;
   overflow:hidden;border-radius:14px;
@@ -169,7 +170,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   position:absolute;top:50%;left:0;right:0;height:72px;
   transform:translateY(-50%);
   border-top:2px solid #fbbf24;border-bottom:2px solid #fbbf24;
-  background:rgba(251,191,36,.06);pointer-events:none;z-index:2;
+  pointer-events:none;z-index:2;
 }
 .drum-fade-t{
   position:absolute;top:0;left:0;right:0;height:24px;
@@ -196,7 +197,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 }
 .btn-ok:active{transform:translateY(4px);box-shadow:none;}
 
-/* フラッシュ */
 .flash{
   position:fixed;inset:0;pointer-events:none;z-index:999;
   opacity:0;transition:opacity .15s;
@@ -236,8 +236,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 </head>
 <body>
 
-<!-- フラッシュオーバーレイ -->
-<div class="flash red" id="flash-red"></div>
+<div class="flash red"   id="flash-red"></div>
 <div class="flash green" id="flash-green"></div>
 
 <!-- ===== タイトル ===== -->
@@ -247,10 +246,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       <div class="emoji">🏃‍♂️</div>
       <h1>ひっ算シャトルラン</h1>
     </div>
+
+    <!-- 速度選択 -->
+    <div style="font-size:.7rem;font-weight:700;color:#94a3b8;text-align:center;margin-bottom:6px;">スピード</div>
+    <div class="speed-row" id="speed-row"></div>
+
+    <!-- モード -->
     <div class="mode-grid" id="mode-grid"></div>
+
+    <!-- スタート＋歯車 -->
     <div class="start-row">
       <button class="btn-start" id="btn-start">スタート</button>
-      <button class="btn-settings" id="btn-to-settings">⚙️<br>設定</button>
+      <button class="btn-gear-title" id="btn-to-settings">⚙️</button>
     </div>
   </div>
 </div>
@@ -306,20 +313,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
         </div>
       </div>
       <p style="font-size:.65rem;color:#f59e0b;text-align:center;margin-top:8px">
-        ※「だんだん」モードでは自動的に変化します
+        ※「チャレンジ」「のんびり」モードでは自動的に変化します
       </p>
-    </div>
-
-    <div class="card">
-      <div class="card-title">スピードの設定</div>
-      <div class="toggle-row">
-        <button class="toggle-btn on" id="tbtn-speedup" onclick="setSpeedUp(true)">正解でだんだん速く</button>
-        <button class="toggle-btn" id="tbtn-steady" onclick="setSpeedUp(false)">正解でも一定速度</button>
-      </div>
-      <div id="qlimit-wrap" style="display:none">
-        <div class="qlimit-label" style="margin-top:10px">問題数</div>
-        <div class="qlimit-row" id="qlimit-row"></div>
-      </div>
     </div>
 
     <div class="card">
@@ -328,6 +323,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
         <button class="toggle-btn on" id="tbtn-bar-on"  onclick="setBarVis(true)">あり</button>
         <button class="toggle-btn"    id="tbtn-bar-off" onclick="setBarVis(false)">なし</button>
       </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">問題数（一定・倍速のとき）</div>
+      <div class="qlimit-row" id="qlimit-row"></div>
     </div>
   </div>
 </div>
@@ -347,9 +347,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       <div class="timer-bar" id="timer-bar" style="width:0%"></div>
     </div>
     <div class="hissan-wrap">
-      <div class="hissan-card" id="hissan-card">
-        <!-- JS で描画 -->
-      </div>
+      <div class="hissan-card" id="hissan-card"></div>
     </div>
     <div style="flex-shrink:0;padding-bottom:4px;">
       <button class="hint-btn" id="hint-btn" style="display:none" onclick="toggleHint()">💡 ヒント</button>
@@ -375,17 +373,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 <script>
 // ===================== 状態 =====================
 const S = {
-  mode:'plus',          // plus|minus|plusminus|times|dandan
-  uMin:10, uMax:30, lMin:1, lMax:9,
-  isSpeedUp:true,
+  mode:'plus',        // plus|minus|plusminus|times|challenge|nonbiri
+  speed:'normal',     // 'steady'|'normal'|'fast'
+  uMin:10,uMax:30,lMin:1,lMax:9,
   showBar:true,
-  questionLimit:10,     // null=無制限
+  questionLimit:10,
 
-  // ゲーム中
-  score:0, lostCount:0, speedLevel:1,
+  score:0,lostCount:0,speedLevel:1,
   currentInterval:1.5,
   question:null,
-  drumValues:[],        // null or 0〜9
+  drumValues:[],
   beatCount:0,
   showHint:false,
   isCleared:false,
@@ -398,70 +395,100 @@ function initAudio(){
   if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
   if(audioCtx.state==='suspended') audioCtx.resume();
 }
-function tone(type,freq,gain,start,dur,ctx){
-  const o=ctx.createOscillator(),g=ctx.createGain();
-  o.type=type; o.frequency.setValueAtTime(freq,start);
-  g.gain.setValueAtTime(gain,start); g.gain.exponentialRampToValueAtTime(0.0001,start+dur);
-  o.connect(g); g.connect(ctx.destination); o.start(start); o.stop(start+dur+.01);
+function tone(type,freq,gain,start,dur){
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=type;o.frequency.setValueAtTime(freq,start);
+  g.gain.setValueAtTime(gain,start);g.gain.exponentialRampToValueAtTime(0.0001,start+dur);
+  o.connect(g);g.connect(audioCtx.destination);o.start(start);o.stop(start+dur+.01);
 }
 function playPilorin(p=1){
-  if(!audioCtx)return; const n=audioCtx.currentTime;
-  tone('triangle',329.63*p,.12,n,.08,audioCtx);
+  if(!audioCtx)return;const n=audioCtx.currentTime;
+  tone('triangle',329.63*p,.12,n,.08);
   const o=audioCtx.createOscillator(),g=audioCtx.createGain();
   o.type='triangle';
   o.frequency.setValueAtTime(440*p,n+.06);
   o.frequency.exponentialRampToValueAtTime(493.88*p,n+.25);
-  g.gain.setValueAtTime(0,n); g.gain.setValueAtTime(.15,n+.06);
+  g.gain.setValueAtTime(0,n);g.gain.setValueAtTime(.15,n+.06);
   g.gain.exponentialRampToValueAtTime(.0001,n+.4);
   o.connect(g);g.connect(audioCtx.destination);o.start(n+.06);o.stop(n+.41);
 }
 function playCorrect(){
-  if(!audioCtx)return; const n=audioCtx.currentTime;
-  [523.25,659.25,783.99,1046.5].forEach((f,i)=>tone('sine',f,.22,n+i*.09,.55,audioCtx));
+  if(!audioCtx)return;const n=audioCtx.currentTime;
+  [523.25,659.25,783.99,1046.5].forEach((f,i)=>tone('sine',f,.22,n+i*.09,.55));
 }
 function playIncorrect(){
-  if(!audioCtx)return; const n=audioCtx.currentTime;
+  if(!audioCtx)return;const n=audioCtx.currentTime;
   const o=audioCtx.createOscillator(),g=audioCtx.createGain();
   o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.linearRampToValueAtTime(110,n+.35);
   g.gain.setValueAtTime(.12,n);g.gain.exponentialRampToValueAtTime(.0001,n+.35);
   o.connect(g);g.connect(audioCtx.destination);o.start(n);o.stop(n+.36);
 }
 function playGameOver(){
-  if(!audioCtx)return; const n=audioCtx.currentTime;
+  if(!audioCtx)return;const n=audioCtx.currentTime;
   const o=audioCtx.createOscillator(),g=audioCtx.createGain();
   o.type='sawtooth';o.frequency.setValueAtTime(260,n);o.frequency.linearRampToValueAtTime(130,n+.8);
   g.gain.setValueAtTime(.15,n);g.gain.exponentialRampToValueAtTime(.0001,n+.8);
   o.connect(g);g.connect(audioCtx.destination);o.start(n);o.stop(n+.81);
 }
 function playClear(){
-  if(!audioCtx)return; const n=audioCtx.currentTime;
-  [523.25,659.25,783.99,1046.5,1318.51,1046.5].forEach((f,i)=>tone('sine',f,.28,n+i*.12,.7,audioCtx));
+  if(!audioCtx)return;const n=audioCtx.currentTime;
+  [523.25,659.25,783.99,1046.5,1318.51,1046.5].forEach((f,i)=>tone('sine',f,.28,n+i*.12,.7));
 }
 
-// ===================== 画面切替 =====================
+// ===================== 画面 =====================
 function showScreen(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
 }
 
-// ===================== だんだんステージ =====================
-function getDandanStage(qNum){
-  if(qNum<=5)  return{op:'+', uMin:10,uMax:30,lMin:1,lMax:9};
-  if(qNum<=10) return{op:'+-',uMin:10,uMax:30,lMin:1,lMax:9};
-  const block=Math.floor((qNum-11)/5);
-  return{op:block%2===0?'+':'+-',uMin:10,uMax:35+block*5,lMin:1,lMax:14+block*5};
+// ===================== チャレンジステージ =====================
+// 1-5:  + ,  上10-30 / 下1-9
+// 6-10: +-, 上10-30 / 下1-9
+// 11問〜: 5問ごとにブロック。上下ともMin/Max+5ずつ増える
+//   block0(11-15): +  , 上16-35 / 下6-15
+//   block1(16-20): +-, 上16-35 / 下6-15
+//   block2(21-25): +-, 上21-40 / 下11-20
+//   block3(26-30): +-, 上26-45 / 下16-25  …
+function getChallengeStage(qNum){
+  if(qNum<=5)  return{op:'+', uMin:10,uMax:30,lMin:1, lMax:9};
+  if(qNum<=10) return{op:'+-',uMin:10,uMax:30,lMin:1, lMax:9};
+  const block=Math.floor((qNum-11)/5); // 0,1,2,...
+  const uMin=16+block*5, uMax=35+block*5;
+  const lMin=6+block*5,  lMax=15+block*5;
+  const op=block===0?'+':'+-';
+  return{op,uMin,uMax,lMin,lMax};
+}
+
+// ===================== 速度計算 =====================
+// steady=一定(1.5s), normal=だんだん速く(max1.0s), fast=倍速固定(0.75s)
+function calcInterval(){
+  if(S.speed==='steady') return 1.5;
+  if(S.speed==='fast')   return 0.75;
+  // normal: だんだん速く
+  return Math.max(1.0, 1.5*Math.pow(.92, S.speedLevel-1));
+}
+function isSpeedVariable(){
+  // normal のみ正解でテンポアップ
+  return S.speed==='normal';
+}
+function hasQuestionLimit(){
+  // steady か fast のとき問題数制限あり
+  return S.speed==='steady'||S.speed==='fast';
 }
 
 // ===================== 問題生成 =====================
 function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
 function buildQuestion(qNum){
   let cfg;
-  if(S.mode==='dandan'){
-    cfg=getDandanStage(qNum);
+  if(S.mode==='challenge'){
+    cfg=getChallengeStage(qNum);
+  } else if(S.mode==='nonbiri'){
+    cfg={op:'+',uMin:S.uMin,uMax:S.uMax,lMin:S.lMin,lMax:S.lMax};
   } else {
     const opMap={plus:'+',minus:'-',plusminus:'+-',times:'x'};
     cfg={op:opMap[S.mode],uMin:S.uMin,uMax:S.uMax,lMin:S.lMin,lMax:S.lMax};
   }
+
   let actualOp=cfg.op;
   if(cfg.op==='+-') actualOp=Math.random()<.5?'+':'-';
 
@@ -472,7 +499,6 @@ function buildQuestion(qNum){
   const ans=actualOp==='+'?n1+n2:actualOp==='-'?n1-n2:n1*n2;
   const digits=Math.max(n1.toString().length,n2.toString().length,ans.toString().length);
 
-  // 繰り上がり/繰り下がり解析
   const s1=n1.toString().split('').reverse();
   const s2=n2.toString().split('').reverse();
   let carryInfo=Array(digits).fill(0);
@@ -491,7 +517,7 @@ function buildQuestion(qNum){
     for(let i=0;i<digits;i++){
       const d1=tmp[i],d2=parseInt(s2[i]||'0');
       if(d1<d2){
-        subH.borrowTop[i]=10; let j=i+1;
+        subH.borrowTop[i]=10;let j=i+1;
         while(j<digits){
           subH.slashed[j]=true;
           if(tmp[j]>0){tmp[j]-=1;subH.reducedVal[j]=tmp[j];break;}
@@ -514,17 +540,14 @@ function buildQuestion(qNum){
 // ===================== 筆算描画 =====================
 function renderHissan(){
   const q=S.question;
-  if(!q) return;
-  const {n1,n2,op,digits,carryInfo,subH}=q;
+  if(!q)return;
+  const{n1,n2,op,digits,carryInfo,subH}=q;
   const s1=n1.toString().split('').reverse();
   const s2=n2.toString().split('').reverse();
-  // 列: op列 + digits列
-  const cols=1+digits;
   const card=document.getElementById('hissan-card');
 
-  let html=`<div class="hissan-grid" style="grid-template-columns:48px repeat(${digits},60px);row-gap:0;column-gap:0;">`;
+  let html=`<div class="hissan-grid" style="grid-template-columns:48px repeat(${digits},60px);">`;
 
-  // ヒント行
   if(S.showHint){
     html+='<div class="hissan-cell hint-val"></div>';
     for(let i=digits-1;i>=0;i--){
@@ -538,7 +561,6 @@ function renderHissan(){
     }
   }
 
-  // 上の段
   html+='<div class="hissan-cell op"></div>';
   for(let i=digits-1;i>=0;i--){
     const v=s1[i]||'';
@@ -550,50 +572,36 @@ function renderHissan(){
     }
   }
 
-  // 下の段（演算子）
   const opChar=op==='x'?'×':op==='+'?'＋':'－';
   html+=`<div class="hissan-cell op">${opChar}</div>`;
   for(let i=digits-1;i>=0;i--){
     html+=`<div class="hissan-cell">${s2[i]||''}</div>`;
   }
 
-  // 横線
   html+=`<div class="hissan-divider"></div>`;
-
-  // ドラム欄
   html+='<div class="hissan-cell op"></div>';
   for(let i=digits-1;i>=0;i--){
     html+=`<div class="hissan-cell" style="padding:4px 3px;height:auto;"><div class="drum-wrap" id="drum-${i}"></div></div>`;
   }
-
   html+='</div>';
   card.innerHTML=html;
 
-  // ドラム初期化
-  for(let i=0;i<digits;i++){
-    initDrum(document.getElementById('drum-'+i), i);
-  }
+  for(let i=0;i<digits;i++) initDrum(document.getElementById('drum-'+i),i);
 
-  // ヒントボタン
   const hb=document.getElementById('hint-btn');
-  if(q.hasHint){ hb.style.display='flex'; hb.className='hint-btn'+(S.showHint?' on':''); }
+  if(q.hasHint){hb.style.display='flex';hb.className='hint-btn'+(S.showHint?' on':'');}
   else hb.style.display='none';
 }
 
-// ===================== ドラムピッカー =====================
-// サイクル: [空欄,0,1,...,9] 11個 × 5セット
-// offset=0→空欄, 1→0, 2→1,...,10→9
-// 下から上スワイプ(clientY減少)→offset増加→数字増加
-const CYCLE=11, SETS=5, ITEM_H=72, OFFSET_BASE=CYCLE*2;
+// ===================== ドラム =====================
+const CYCLE=11,ITEM_H=72,OFFSET_BASE=CYCLE*2;
 const DRUM_LABELS=['－','0','1','2','3','4','5','6','7','8','9'];
-
 function mod(n,m){return((n%m)+m)%m;}
 function valToOff(v){return v===null?0:v+1;}
 function offToVal(o){const n=mod(o,CYCLE);return n===0?null:n-1;}
 
-function initDrum(el, digitIdx){
-  // トラック描画
-  const total=CYCLE*SETS;
+function initDrum(el,digitIdx){
+  const total=CYCLE*5;
   let inner='';
   for(let i=0;i<total;i++){
     const label=DRUM_LABELS[i%CYCLE];
@@ -605,13 +613,12 @@ function initDrum(el, digitIdx){
     <div class="drum-fade-b"></div>
     <div class="drum-track" style="transform:translateY(${-(OFFSET_BASE+valToOff(S.drumValues[digitIdx]))*ITEM_H}px)">${inner}</div>
   `;
-
   const track=el.querySelector('.drum-track');
-  let dragging=false, startY=0, baseOff=valToOff(S.drumValues[digitIdx]);
+  let dragging=false,startY=0,baseOff=valToOff(S.drumValues[digitIdx]);
 
   function getY(e){
-    if(e.changedTouches) return e.changedTouches[0].clientY;
-    if(e.touches) return e.touches[0].clientY;
+    if(e.changedTouches)return e.changedTouches[0].clientY;
+    if(e.touches)return e.touches[0].clientY;
     return e.clientY;
   }
   function applyY(off,animate){
@@ -620,22 +627,18 @@ function initDrum(el, digitIdx){
   }
   function onDown(e){e.preventDefault();dragging=true;startY=getY(e);}
   function onMove(e){
-    if(!dragging)return; e.preventDefault();
-    const dy=getY(e)-startY;
-    applyY(baseOff+(-dy/ITEM_H),false);
+    if(!dragging)return;e.preventDefault();
+    applyY(baseOff+(-(getY(e)-startY)/ITEM_H),false);
   }
   function onUp(e){
-    if(!dragging)return; dragging=false;
-    const dy=getY(e)-startY;
-    const raw=baseOff+(-dy/ITEM_H);
+    if(!dragging)return;dragging=false;
+    const raw=baseOff+(-(getY(e)-startY)/ITEM_H);
     const snapped=Math.round(raw);
-    const normalized=mod(snapped,CYCLE);
+    const norm=mod(snapped,CYCLE);
     applyY(snapped,true);
-    setTimeout(()=>{applyY(normalized,false); baseOff=normalized;},160);
-    const val=offToVal(normalized);
-    S.drumValues[digitIdx]=val;
+    setTimeout(()=>{applyY(norm,false);baseOff=norm;},160);
+    S.drumValues[digitIdx]=offToVal(norm);
   }
-
   el.addEventListener('mousedown',onDown);
   el.addEventListener('mousemove',onMove);
   el.addEventListener('mouseup',onUp);
@@ -647,52 +650,46 @@ function initDrum(el, digitIdx){
 
 // ===================== タイマー =====================
 function stopTick(){if(S.tickTimer){clearTimeout(S.tickTimer);S.tickTimer=null;}}
-
 function tick(){
   S.beatCount++;
   if(S.beatCount<=10){
     playPilorin(1+(S.beatCount-1)*.05);
     document.getElementById('timer-bar').style.width=(S.beatCount/10*100)+'%';
-    S.tickTimer=setTimeout(tick, S.currentInterval*1000);
+    S.tickTimer=setTimeout(tick,S.currentInterval*1000);
   } else {
     handleTimeout();
   }
 }
-
 function startTick(){
-  stopTick();
-  S.beatCount=0;
+  stopTick();S.beatCount=0;
   document.getElementById('timer-bar').style.width='0%';
-  S.tickTimer=setTimeout(tick, S.currentInterval*1000);
+  S.tickTimer=setTimeout(tick,S.currentInterval*1000);
 }
-
 function handleTimeout(){
-  stopTick();
-  playIncorrect();
-  flash('red');
-  S.lostCount++;
-  updateHearts();
-  if(S.lostCount>=3){
-    setTimeout(()=>{playGameOver();showGameOver();},400);
-  } else {
-    setTimeout(()=>nextQuestion(),800);
-  }
+  stopTick();playIncorrect();flash('red');
+  S.lostCount++;updateHearts();
+  if(S.lostCount>=3){setTimeout(()=>{playGameOver();showGameOver();},400);}
+  else{setTimeout(()=>nextQuestion(),800);}
 }
 
 // ===================== ゲーム制御 =====================
-function calcInterval(){
-  const lvl=S.isSpeedUp?S.speedLevel:1;
-  return Math.max(1.0, 1.5*Math.pow(.92,lvl-1));
-}
-
 function startGame(){
   initAudio();
-  S.score=0; S.lostCount=0; S.speedLevel=1;
-  S.currentInterval=1.5; S.isCleared=false;
+  // のんびりモードの強制設定
+  if(S.mode==='nonbiri'){
+    S.speed='steady';
+    S.questionLimit=10;
+    S.showBar=false;
+    // タイトルのUIも反映
+    buildSpeedRow();
+    setBarVis(false);
+  }
+  S.score=0;S.lostCount=0;S.speedLevel=1;
+  S.currentInterval=calcInterval();
+  S.isCleared=false;
   showScreen('game');
   document.getElementById('timer-bar-wrap').style.display=S.showBar?'block':'none';
-  updateHearts();
-  updateScore();
+  updateHearts();updateScore();
   setTimeout(()=>nextQuestion(),100);
 }
 
@@ -706,40 +703,29 @@ function nextQuestion(){
 }
 
 function handleOK(){
-  const q=S.question;
-  if(!q) return;
-  let ans=0, hasInput=false;
+  const q=S.question;if(!q)return;
+  let ans=0,hasInput=false;
   for(let i=0;i<q.digits;i++){
-    if(S.drumValues[i]!==null){hasInput=true; ans+=S.drumValues[i]*Math.pow(10,i);}
+    if(S.drumValues[i]!==null){hasInput=true;ans+=S.drumValues[i]*Math.pow(10,i);}
   }
-  if(!hasInput) return;
+  if(!hasInput)return;
 
   if(ans===q.ans){
-    stopTick();
-    playCorrect();
-    flash('green');
+    stopTick();playCorrect();flash('green');
     S.score++;
-    if(S.isSpeedUp) S.speedLevel++;
-    S.currentInterval=calcInterval();
+    if(isSpeedVariable()){S.speedLevel++;S.currentInterval=calcInterval();}
     updateScore();
-    const limit=S.isSpeedUp?null:S.questionLimit;
+    const limit=hasQuestionLimit()?S.questionLimit:null;
     setTimeout(()=>{
-      if(limit!==null&&S.score>=limit){
-        playClear(); S.isCleared=true; showGameOver();
-      } else {
-        nextQuestion();
-      }
+      if(limit!==null&&S.score>=limit){playClear();S.isCleared=true;showGameOver();}
+      else nextQuestion();
     },650);
   } else {
-    playIncorrect();
-    flash('red');
+    playIncorrect();flash('red');
   }
 }
 
-function toggleHint(){
-  S.showHint=!S.showHint;
-  renderHissan();
-}
+function toggleHint(){S.showHint=!S.showHint;renderHissan();}
 
 function showGameOver(){
   stopTick();
@@ -747,7 +733,7 @@ function showGameOver(){
   if(S.isCleared){
     document.getElementById('go-emoji').textContent='🎉';
     document.getElementById('go-title').textContent='ぜんぶできた！';
-    document.getElementById('go-sub').textContent=`${S.questionLimit}問クリア！`;
+    document.getElementById('go-sub').textContent=S.questionLimit+'問クリア！';
   } else {
     document.getElementById('go-emoji').textContent='😊';
     document.getElementById('go-title').textContent='がんばったね';
@@ -758,30 +744,24 @@ function showGameOver(){
 
 // ===================== UI更新 =====================
 function updateHearts(){
-  const el=document.getElementById('hearts');
-  el.innerHTML='';
+  const el=document.getElementById('hearts');el.innerHTML='';
   for(let i=1;i<=3;i++){
     const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('class','heart');
-    svg.setAttribute('viewBox','0 0 20 20');
-    svg.setAttribute('fill', i<=(3-S.lostCount)?'#FFB3C6':'#DDD6C8');
+    svg.setAttribute('class','heart');svg.setAttribute('viewBox','0 0 20 20');
+    svg.setAttribute('fill',i<=(3-S.lostCount)?'#FFB3C6':'#DDD6C8');
     svg.innerHTML='<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>';
     el.appendChild(svg);
   }
 }
-
 function updateScore(){
-  const limit=S.isSpeedUp?null:S.questionLimit;
+  const limit=hasQuestionLimit()?S.questionLimit:null;
   document.getElementById('score-disp').innerHTML=
-    `${S.score}<span style="font-size:.8rem;color:#94a3b8;margin-left:2px">問</span>`;
-  document.getElementById('score-limit-disp').textContent=
-    limit!==null?`/ ${limit}問`:'';
+    S.score+'<span style="font-size:.8rem;color:#94a3b8;margin-left:2px">問</span>';
+  document.getElementById('score-limit-disp').textContent=limit!==null?'/ '+limit+'問':'';
 }
-
 function flash(type){
   const el=document.getElementById('flash-'+type);
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),300);
+  el.classList.add('show');setTimeout(()=>el.classList.remove('show'),300);
 }
 
 // ===================== 設定UI =====================
@@ -789,32 +769,22 @@ function changeNum(key,delta){
   const inp=document.getElementById('inp-'+key);
   let v=parseInt(inp.value)||1;
   v=Math.max(1,Math.min(999,v+delta));
-  inp.value=v; S[key]=v;
-  clampRanges();
+  inp.value=v;S[key]=v;clampRanges();
 }
 function syncNum(key){
   const v=parseInt(document.getElementById('inp-'+key).value);
-  if(!isNaN(v)) S[key]=Math.max(1,Math.min(999,v));
+  if(!isNaN(v))S[key]=Math.max(1,Math.min(999,v));
   clampRanges();
 }
 function clampRanges(){
   if(S.uMin>S.uMax){S.uMax=S.uMin;document.getElementById('inp-uMax').value=S.uMax;}
   if(S.lMin>S.lMax){S.lMax=S.lMin;document.getElementById('inp-lMax').value=S.lMax;}
 }
-
-function setSpeedUp(val){
-  S.isSpeedUp=val;
-  document.getElementById('tbtn-speedup').className='toggle-btn'+(val?' on':'');
-  document.getElementById('tbtn-steady').className='toggle-btn'+(!val?' on':'');
-  document.getElementById('qlimit-wrap').style.display=val?'none':'block';
-}
 function setBarVis(val){
   S.showBar=val;
   document.getElementById('tbtn-bar-on').className='toggle-btn'+(val?' on':'');
   document.getElementById('tbtn-bar-off').className='toggle-btn'+(!val?' on':'');
 }
-
-// 問題数ボタン
 function buildQLimitRow(){
   const row=document.getElementById('qlimit-row');
   const opts=[5,10,15,20,null];
@@ -828,22 +798,39 @@ function buildQLimitRow(){
   });
 }
 
-// モードボタン
+// ===================== 速度ボタン =====================
+const SPEEDS=[
+  {id:'steady', label:'一定'},
+  {id:'normal', label:'普通'},
+  {id:'fast',   label:'倍速'},
+];
+function buildSpeedRow(){
+  const row=document.getElementById('speed-row');
+  row.innerHTML='';
+  SPEEDS.forEach(sp=>{
+    const b=document.createElement('button');
+    b.className='speed-btn'+(S.speed===sp.id?' on':'');
+    b.textContent=sp.label;
+    b.onclick=()=>{S.speed=sp.id;buildSpeedRow();};
+    row.appendChild(b);
+  });
+}
+
+// ===================== モードボタン =====================
 const MODES=[
-  {id:'plus',     label:'たす',     sub:'＋',   cls:'mode-plus'},
-  {id:'minus',    label:'ひく',     sub:'－',   cls:'mode-minus'},
-  {id:'plusminus',label:'たすひく', sub:'＋－', cls:'mode-plusminus'},
-  {id:'times',    label:'かける',   sub:'×',    cls:'mode-times'},
-  {id:'dandan',   label:'だんだん', sub:'📈',   cls:'mode-dandan'},
+  {id:'plus',      label:'たす',     sub:'＋'},
+  {id:'minus',     label:'ひく',     sub:'－'},
+  {id:'plusminus', label:'たすひく', sub:'＋－'},
+  {id:'times',     label:'かける',   sub:'×'},
+  {id:'challenge', label:'チャレンジ',sub:'📈'},
+  {id:'nonbiri',   label:'のんびり', sub:'🌸'},
 ];
 function buildModeGrid(){
   const grid=document.getElementById('mode-grid');
   grid.innerHTML='';
-  // 4つ＋最後1つを全幅
-  MODES.forEach((m,idx)=>{
+  MODES.forEach(m=>{
     const b=document.createElement('button');
-    b.className=`mode-btn ${m.cls}${S.mode===m.id?' selected':''}`;
-    if(idx===4) b.style.gridColumn='1/-1';
+    b.className='mode-btn'+(S.mode===m.id?' selected':'');
     b.innerHTML=`<span class="sub">${m.sub}</span><span>${m.label}</span>`;
     b.onclick=()=>{S.mode=m.id;buildModeGrid();};
     grid.appendChild(b);
@@ -856,6 +843,7 @@ document.getElementById('btn-to-settings').onclick=()=>showScreen('settings');
 document.getElementById('btn-back-settings').onclick=()=>showScreen('title');
 document.getElementById('btn-to-title').onclick=()=>{stopTick();showScreen('title');};
 
+buildSpeedRow();
 buildModeGrid();
 buildQLimitRow();
 </script>
