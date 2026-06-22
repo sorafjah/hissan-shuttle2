@@ -187,7 +187,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   border-radius:13px;background:#fff;border:2px solid #d1cdc7;
   touch-action:none;cursor:grab;
 }
-.drum-track{position:absolute;top:0;left:100%;}
+.drum-track{position:absolute;top:0;left:0;width:100%;}
 .drum-item{display:flex;align-items:center;justify-content:center;
   font-size:clamp(2.1rem,6.5vw,3.4rem);font-weight:400;color:#2D334E;
   font-variant-numeric:tabular-nums;}
@@ -201,7 +201,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
 /* 下部ボタン */
 .game-bottom{flex-shrink:0;padding-top:4px;}
-.bottom-sub-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.bottom-sub-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:7px;min-height:34px;
+}
+.bottom-sub-left{flex:1;display:flex;align-items:center;}
+.bottom-sub-right{flex:0 0 auto;display:flex;align-items:center;}
 .hint-btn{
   display:none;align-items:center;gap:6px;
   padding:5px 13px;border-radius:11px;background:#fff;
@@ -209,7 +214,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 }
 .hint-btn.on{border-color:#10b981;color:#10b981;}
 .pass-btn{
-  display:none;
   padding:5px 12px;border-radius:11px;background:#fff;
   border:2px solid #e2e8f0;font-weight:700;font-size:.75rem;color:#94a3b8;
 }
@@ -365,8 +369,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
     <div class="game-bottom">
       <div class="bottom-sub-row">
-        <button class="hint-btn" id="hint-btn" onclick="toggleHint()">💡 ヒント</button>
-        <button class="pass-btn" id="pass-btn" onclick="handlePass()">スキップ</button>
+        <div class="bottom-sub-left">
+          <button class="hint-btn" id="hint-btn" onclick="toggleHint()">💡 ヒント</button>
+        </div>
+        <div class="bottom-sub-right">
+          <button class="pass-btn" id="pass-btn" onclick="handlePass()">スキップ</button>
+        </div>
       </div>
       <button class="btn-ok" id="btn-ok" onclick="handleOK()">OK</button>
     </div>
@@ -497,22 +505,32 @@ function playTick(pitch) {
 function startJikkuriLoop() {
   stopJikkuriLoop();
   if (!AC) return;
-  let beat = 0;
-  const BPM = 76;
-  const interval = 60 / BPM;
-  const pattern = [1, 0, 0.5, 0]; // 強・弱・中・弱
+  // AudioContextが suspended の場合は resume してから開始
+  const start = () => {
+    let beat = 0;
+    const BPM = 76;
+    const intervalMs = (60 / BPM) * 1000;
+    const pattern = [1, 0, 0.5, 0];
 
-  function scheduleBeat() {
-    const t = AC.currentTime;
-    const vol = pattern[beat % pattern.length];
-    if (vol > 0) {
-      const freq = (beat % 4 === 0) ? 200 : 150;
-      beep('sine', freq, vol * 0.08, t, 0.05);
+    function tick() {
+      if (!AC) return;
+      const t = AC.currentTime;
+      const vol = pattern[beat % pattern.length];
+      if (vol > 0) {
+        const freq = (beat % 4 === 0) ? 200 : 150;
+        beep('sine', freq, vol * 0.08, t, 0.05);
+      }
+      beat++;
+      jikkuriLoopNode = setTimeout(tick, intervalMs);
     }
-    beat++;
-    jikkuriLoopNode = setTimeout(scheduleBeat, interval * 1000);
+    jikkuriLoopNode = setTimeout(tick, intervalMs);
+  };
+
+  if (AC.state === 'suspended') {
+    AC.resume().then(start);
+  } else {
+    start();
   }
-  jikkuriLoopNode = setTimeout(scheduleBeat, interval * 1000);
 }
 
 function stopJikkuriLoop() {
