@@ -471,8 +471,18 @@ let AC = null;
 let jikkuriLoopNode = null;  // じっくりモードのループノード
 
 function initAudio() {
-  if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
-  if (AC.state === 'suspended') AC.resume();
+  if (!AC) {
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (AC.state === 'suspended') {
+    AC.resume();
+  }
+  // Safari対策：無音バッファを一発鳴らしてrunning状態を確定させる
+  const buf = AC.createBuffer(1, 1, AC.sampleRate);
+  const src = AC.createBufferSource();
+  src.buffer = buf;
+  src.connect(AC.destination);
+  src.start(0);
 }
 
 function beep(type, freq, vol, t, dur) {
@@ -505,31 +515,37 @@ function playTick(pitch) {
 function startJikkuriLoop() {
   stopJikkuriLoop();
   if (!AC) return;
-  // AudioContextが suspended の場合は resume してから開始
-  const start = () => {
+
+  const go = () => {
     let beat = 0;
-    const BPM = 76;
-    const intervalMs = (60 / BPM) * 1000;
-    const pattern = [1, 0, 0.5, 0];
+    const intervalMs = (60 / 76) * 1000;
+    const pattern = [1, 0, 0.6, 0];
 
     function tick() {
       if (!AC) return;
       const t = AC.currentTime;
       const vol = pattern[beat % pattern.length];
       if (vol > 0) {
-        const freq = (beat % 4 === 0) ? 200 : 150;
-        beep('sine', freq, vol * 0.08, t, 0.05);
+        const freq = (beat % 4 === 0) ? 220 : 165;
+        // beepを直接展開して確実に鳴らす
+        const o = AC.createOscillator(), g = AC.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, t);
+        g.gain.setValueAtTime(vol * 0.12, t);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+        o.connect(g); g.connect(AC.destination);
+        o.start(t); o.stop(t + 0.09);
       }
       beat++;
       jikkuriLoopNode = setTimeout(tick, intervalMs);
     }
-    jikkuriLoopNode = setTimeout(tick, intervalMs);
+    tick(); // 最初の1発をすぐ鳴らす
   };
 
-  if (AC.state === 'suspended') {
-    AC.resume().then(start);
+  if (AC.state !== 'running') {
+    AC.resume().then(go);
   } else {
-    start();
+    go();
   }
 }
 
@@ -842,12 +858,17 @@ function onTimeout() {
   stopTick();
   playNG();
   flash('red');
-  // 全モード: タイムアウトしても同じ問題を続ける（ハートは減らない）
-  setTimeout(() => {
-    S.drums = Array(S.question.dig).fill(null);
-    renderHissan();
-    startTick();
-  }, 700);
+  // じっくり以外はハートを減らす
+  if (S.speed !== 'jikkuri') {
+    S.lostCount++;
+    renderHearts();
+    if (S.lostCount >= 3) {
+      setTimeout(() => { playOver(); doGameOver(); }, 500);
+      return;
+    }
+  }
+  // 解答欄はそのまま、タイマーだけ再スタート
+  setTimeout(() => startTick(), 700);
 }
 
 // ============================================================
@@ -956,8 +977,18 @@ function handlePass() {
   if (!S.question || S.okLocked) return;
   stopTick();
   stopJikkuriLoop();
+  playNG();
   flash('red');
-  setTimeout(() => newQuestion(), 400);
+  // じっくり以外はハートを減らす
+  if (S.speed !== 'jikkuri') {
+    S.lostCount++;
+    renderHearts();
+    if (S.lostCount >= 3) {
+      setTimeout(() => { playOver(); doGameOver(); }, 400);
+      return;
+    }
+  }
+  setTimeout(() => newQuestion(), 500);
 }
 
 function toggleHint() {
@@ -1003,9 +1034,11 @@ function renderHearts() {
 
 function renderScore() {
   const current = S.questionNum;
-  const lim     = S.mode === 'challenge' ? S.questionLimit
-                : usesLimit()            ? S.questionLimit
-                : null;
+  // ランダムはjikkuri/dashのとき問題数あり、normalは無制限
+  const lim = S.mode === 'challenge' ? S.questionLimit
+            : usesLimit()            ? S.questionLimit
+            : (S.mode === 'random' && S.speed !== 'normal') ? S.questionLimit
+            : null;
   document.getElementById('score-main').innerHTML =
     current + '<span style="font-size:.78rem;color:#94a3b8;margin-left:2px">問目</span>';
   document.getElementById('score-limit').textContent =
