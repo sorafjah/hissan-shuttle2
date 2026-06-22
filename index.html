@@ -36,7 +36,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   text-align:center;
 }
 
-/* モード: 3列×2行、正方形 */
+/* モード: 3列×2行 */
 .mode-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -68,7 +68,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .speed-btn.on{border-color:#84cc16;color:#3f6212;background:#f7fee7;}
 
 /* スタート＋歯車 */
-.start-wrap{position:relative;padding-bottom:28px;}
+.start-wrap{position:relative;padding-bottom:36px;}
 .btn-start{
   display:block;width:100%;padding:15px;
   background:#f59e0b;color:#fff;
@@ -79,7 +79,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .btn-start:active{transform:translateY(4px);box-shadow:none;}
 .btn-gear-title{
   position:absolute;right:2px;bottom:0;
-  font-size:1.4rem;padding:2px 4px;
+  font-size:1.4rem;padding:4px 6px;
   line-height:1;opacity:.45;
 }
 
@@ -187,7 +187,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   border-radius:13px;background:#fff;border:2px solid #d1cdc7;
   touch-action:none;cursor:grab;
 }
-.drum-track{position:absolute;top:0;left:0;width:100%;}
+.drum-track{position:absolute;top:0;left:100%;}
 .drum-item{display:flex;align-items:center;justify-content:center;
   font-size:clamp(2.1rem,6.5vw,3.4rem);font-weight:400;color:#2D334E;
   font-variant-numeric:tabular-nums;}
@@ -201,13 +201,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
 /* 下部ボタン */
 .game-bottom{flex-shrink:0;padding-top:4px;}
+.bottom-sub-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
 .hint-btn{
   display:none;align-items:center;gap:6px;
   padding:5px 13px;border-radius:11px;background:#fff;
   border:2px solid #e2e8f0;font-weight:700;font-size:.82rem;color:#f59e0b;
-  margin-bottom:7px;
 }
 .hint-btn.on{border-color:#10b981;color:#10b981;}
+.pass-btn{
+  display:none;
+  padding:5px 12px;border-radius:11px;background:#fff;
+  border:2px solid #e2e8f0;font-weight:700;font-size:.75rem;color:#94a3b8;
+}
 .btn-ok{
   width:100%;padding:clamp(11px,2.2vh,17px);
   background:#59BA73;color:#fff;
@@ -258,7 +263,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 <!-- ===== タイトル ===== -->
 <div class="screen active" id="screen-title">
   <div class="title-inner">
-    <div class="title-logo"><h1>🏃‍♂️💨 ひっ算シャトルラン</h1></div>
+    <div class="title-logo"><h1>🏃‍♂️ ひっ算シャトルラン</h1></div>
     <div class="mode-grid" id="mode-grid"></div>
     <div class="speed-wrap">
       <div class="speed-label">スピード</div>
@@ -280,7 +285,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     </div>
 
     <div class="s-card">
-      <div class="range-group">
+      <div class="range-group" id="range-upper">
         <div class="range-label">上の段の数</div>
         <div class="range-row">
           <div class="num-sel"><span>最小</span>
@@ -299,7 +304,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           </div>
         </div>
       </div>
-      <div class="range-group">
+      <div class="range-group" id="range-lower">
         <div class="range-label">下の段の数</div>
         <div class="range-row">
           <div class="num-sel"><span>最小</span>
@@ -319,7 +324,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
         </div>
       </div>
       <p style="font-size:.63rem;color:#f59e0b;text-align:center;margin-top:7px">
-        ※「チャレンジ」「のんびり」では自動で変化します
+        ※「チャレンジ」では自動で変化します
       </p>
     </div>
 
@@ -332,7 +337,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     </div>
 
     <div class="s-card">
-      <div class="s-card-title">問題数（一定・倍速のとき）</div>
+      <div class="s-card-title">問題数（じっくり・ダッシュのとき）</div>
       <div class="qlimit-row" id="qlimit-row"></div>
     </div>
   </div>
@@ -345,7 +350,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       <button class="btn-gear" id="btn-to-title">⚙️</button>
       <div class="hearts" id="hearts"></div>
       <div class="score-box">
-        <div id="score-main">0<span style="font-size:.78rem;color:#94a3b8;margin-left:2px">問</span></div>
+        <div id="score-main">1<span style="font-size:.78rem;color:#94a3b8;margin-left:2px">問目</span></div>
         <div class="score-sub" id="score-limit"></div>
       </div>
     </div>
@@ -359,8 +364,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     </div>
 
     <div class="game-bottom">
-      <button class="hint-btn" id="hint-btn" onclick="toggleHint()">💡 ヒント</button>
-      <button class="btn-ok" onclick="handleOK()">OK</button>
+      <div class="bottom-sub-row">
+        <button class="hint-btn" id="hint-btn" onclick="toggleHint()">💡 ヒント</button>
+        <button class="pass-btn" id="pass-btn" onclick="handlePass()">スキップ</button>
+      </div>
+      <button class="btn-ok" id="btn-ok" onclick="handleOK()">OK</button>
     </div>
   </div>
 </div>
@@ -381,172 +389,297 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 'use strict';
 
 // ============================================================
+// 定数
+// ============================================================
+const CYCLE = 11;
+const OFFSET_BASE = CYCLE * 2;
+const DLABELS = ['－','0','1','2','3','4','5','6','7','8','9'];
+
+// モード定義
+// 配置: 左上・中上・右上 / 左下・中下・右下
+const MODES = [
+  {id:'plus',      sub:'＋',   l:'たす'},
+  {id:'minus',     sub:'－',   l:'ひく'},
+  {id:'plusminus', sub:'＋－', l:'たすひく'},
+  {id:'times',     sub:'×',   l:'かける'},
+  {id:'challenge', sub:'↑',   l:'チャレンジ'},
+  {id:'random',    sub:'？',   l:'ランダム'},
+];
+
+// チャレンジステージ定義（3問ごと）
+// op: '+'たし算 '-'ひき算 '+-'たすひく
+const CHALLENGE_STAGES = [
+  {op:'+',  uMin:10, uMax:30, lMin:1,  lMax:9 },  // 1〜3
+  {op:'-',  uMin:10, uMax:30, lMin:1,  lMax:9 },  // 4〜6
+  {op:'+',  uMin:16, uMax:35, lMin:6,  lMax:15},  // 7〜9  ← たし算割り込み
+  {op:'+-', uMin:21, uMax:40, lMin:11, lMax:20},  // 10〜12
+  {op:'+-', uMin:26, uMax:45, lMin:16, lMax:25},  // 13〜15
+];
+// 16問目以降: CHALLENGE_STAGES最後から b=1,2,3…と+5ずつ
+function challengeStage(questionNum) {
+  const idx = Math.floor((questionNum - 1) / 3);
+  if (idx < CHALLENGE_STAGES.length) return CHALLENGE_STAGES[idx];
+  const b = idx - (CHALLENGE_STAGES.length - 1);
+  const last = CHALLENGE_STAGES[CHALLENGE_STAGES.length - 1];
+  return {
+    op: '+-',
+    uMin: last.uMin + b * 5,
+    uMax: last.uMax + b * 5,
+    lMin: last.lMin + b * 5,
+    lMax: last.lMax + b * 5,
+  };
+}
+
+// ============================================================
 // 状態
 // ============================================================
 const S = {
   // タイトル設定
-  mode : 'plus',    // plus|minus|plusminus|times|nonbiri|challenge
-  speed: 'normal',  // steady|normal|fast
-  uMin:10, uMax:30, lMin:1, lMax:9,
+  mode:  'plus',
+  speed: 'normal',
+  uMin: 10, uMax: 30,
+  lMin:  1, lMax:  9,
   showBar: true,
-  questionLimit: 15, // null=無制限
+  questionLimit: 10,
 
   // ゲーム中
-  score:0, lostCount:0, speedLevel:1,
-  interval: 1.5,
-  question: null,
-  drums: [],      // null or 0〜9
-  beatCount: 0,
-  showHint: false,
-  isCleared: false,
-  tickTimer: null,
+  score:       0,   // 正解数
+  questionNum: 0,   // 出題番号（パス・タイムアップでも増える）
+  lostCount:   0,
+  speedLevel:  1,
+  interval:    1.5,
+  question:    null,
+  drums:       [],
+  showHint:    false,
+  isCleared:   false,
+  tickTimer:   null,
+  okLocked:    false,  // OK連打防止フラグ
 };
 
 // ============================================================
 // オーディオ
 // ============================================================
 let AC = null;
-function initAudio(){
-  if(!AC) AC = new(window.AudioContext||window.webkitAudioContext)();
-  if(AC.state==='suspended') AC.resume();
+let jikkuriLoopNode = null;  // じっくりモードのループノード
+
+function initAudio() {
+  if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+  if (AC.state === 'suspended') AC.resume();
 }
-function beep(type,freq,vol,t,dur){
-  const o=AC.createOscillator(), g=AC.createGain();
-  o.type=type; o.frequency.setValueAtTime(freq,t);
-  g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-  o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+dur+.01);
+
+function beep(type, freq, vol, t, dur) {
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type;
+  o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(AC.destination);
+  o.start(t); o.stop(t + dur + 0.01);
 }
-function playTick(pitch){
-  if(!AC) return; const t=AC.currentTime;
-  beep('triangle',329.63*pitch,.12,t,.08);
-  const o=AC.createOscillator(), g=AC.createGain();
-  o.type='triangle';
-  o.frequency.setValueAtTime(440*pitch,t+.06);
-  o.frequency.exponentialRampToValueAtTime(493.88*pitch,t+.25);
-  g.gain.setValueAtTime(0,t); g.gain.setValueAtTime(.15,t+.06);
-  g.gain.exponentialRampToValueAtTime(.0001,t+.4);
-  o.connect(g); g.connect(AC.destination); o.start(t+.06); o.stop(t+.41);
+
+// カウントアップ音（ふつう・ダッシュ）
+function playTick(pitch) {
+  if (!AC) return;
+  const t = AC.currentTime;
+  beep('triangle', 329.63 * pitch, .12, t, .08);
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(440 * pitch, t + .06);
+  o.frequency.exponentialRampToValueAtTime(493.88 * pitch, t + .25);
+  g.gain.setValueAtTime(0, t);
+  g.gain.setValueAtTime(.15, t + .06);
+  g.gain.exponentialRampToValueAtTime(.0001, t + .4);
+  o.connect(g); g.connect(AC.destination);
+  o.start(t + .06); o.stop(t + .41);
 }
-function playOK(){
-  if(!AC) return; const t=AC.currentTime;
-  [523.25,659.25,783.99,1046.5].forEach((f,i)=>beep('sine',f,.22,t+i*.09,.55));
+
+// じっくりモード: シンプルなリズムループ
+function startJikkuriLoop() {
+  stopJikkuriLoop();
+  if (!AC) return;
+  let beat = 0;
+  const BPM = 76;
+  const interval = 60 / BPM;
+  const pattern = [1, 0, 0.5, 0]; // 強・弱・中・弱
+
+  function scheduleBeat() {
+    const t = AC.currentTime;
+    const vol = pattern[beat % pattern.length];
+    if (vol > 0) {
+      const freq = (beat % 4 === 0) ? 200 : 150;
+      beep('sine', freq, vol * 0.08, t, 0.05);
+    }
+    beat++;
+    jikkuriLoopNode = setTimeout(scheduleBeat, interval * 1000);
+  }
+  jikkuriLoopNode = setTimeout(scheduleBeat, interval * 1000);
 }
-function playNG(){
-  if(!AC) return; const t=AC.currentTime;
-  const o=AC.createOscillator(), g=AC.createGain();
-  o.type='sawtooth'; o.frequency.setValueAtTime(150,t); o.frequency.linearRampToValueAtTime(110,t+.35);
-  g.gain.setValueAtTime(.12,t); g.gain.exponentialRampToValueAtTime(.0001,t+.35);
-  o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+.36);
+
+function stopJikkuriLoop() {
+  if (jikkuriLoopNode) { clearTimeout(jikkuriLoopNode); jikkuriLoopNode = null; }
 }
-function playOver(){
-  if(!AC) return; const t=AC.currentTime;
-  const o=AC.createOscillator(), g=AC.createGain();
-  o.type='sawtooth'; o.frequency.setValueAtTime(260,t); o.frequency.linearRampToValueAtTime(130,t+.8);
-  g.gain.setValueAtTime(.15,t); g.gain.exponentialRampToValueAtTime(.0001,t+.8);
-  o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+.81);
+
+// 正解音
+function playOK() {
+  if (!AC) return;
+  const t = AC.currentTime;
+  [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => beep('sine', f, .22, t + i * .09, .55));
 }
-function playClear(){
-  if(!AC) return; const t=AC.currentTime;
-  [523.25,659.25,783.99,1046.5,1318.51,1046.5].forEach((f,i)=>beep('sine',f,.28,t+i*.12,.7));
+
+// 不正解・タイムアップ: ポヨン音
+function playNG() {
+  if (!AC) return;
+  const t = AC.currentTime;
+  // ぽよん: 低めのサイン波が少し下がる
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(330, t);
+  o.frequency.exponentialRampToValueAtTime(220, t + 0.3);
+  g.gain.setValueAtTime(0.18, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+  o.connect(g); g.connect(AC.destination);
+  o.start(t); o.stop(t + 0.41);
+  // 高めのぽよん重ねる
+  const o2 = AC.createOscillator(), g2 = AC.createGain();
+  o2.type = 'sine';
+  o2.frequency.setValueAtTime(500, t + 0.04);
+  o2.frequency.exponentialRampToValueAtTime(300, t + 0.35);
+  g2.gain.setValueAtTime(0.10, t + 0.04);
+  g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+  o2.connect(g2); g2.connect(AC.destination);
+  o2.start(t + 0.04); o2.stop(t + 0.41);
+}
+
+function playOver() {
+  if (!AC) return;
+  const t = AC.currentTime;
+  // ゲームオーバーもポヨン系にする
+  [330, 280, 220].forEach((f, i) => {
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(f, t + i * 0.18);
+    o.frequency.exponentialRampToValueAtTime(f * 0.7, t + i * 0.18 + 0.3);
+    g.gain.setValueAtTime(0.15, t + i * 0.18);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.18 + 0.4);
+    o.connect(g); g.connect(AC.destination);
+    o.start(t + i * 0.18); o.stop(t + i * 0.18 + 0.41);
+  });
+}
+
+function playClear() {
+  if (!AC) return;
+  const t = AC.currentTime;
+  [523.25, 659.25, 783.99, 1046.5, 1318.51, 1046.5].forEach((f, i) =>
+    beep('sine', f, .28, t + i * .12, .7));
 }
 
 // ============================================================
 // 画面切替
 // ============================================================
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+id).classList.add('active');
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
 }
-function flash(type){
-  const el=document.getElementById('flash-'+type);
-  el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),300);
+
+function flash(type) {
+  const el = document.getElementById('flash-' + type);
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 300);
 }
 
 // ============================================================
-// 問題定義
-// ============================================================
-function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-
-// チャレンジのステージ設定
-function challengeStage(n){
-  if(n<=5)  return{op:'+', uMin:10,uMax:30,lMin:1, lMax:9};
-  if(n<=10) return{op:'+-',uMin:10,uMax:30,lMin:1, lMax:9};
-  const b=Math.floor((n-11)/5);
-  return{op:b===0?'+':'+-', uMin:16+b*5,uMax:35+b*5, lMin:6+b*5,lMax:15+b*5};
-}
-
 // 問題生成
-function makeQuestion(qNum){
-  // 設定取得
-  let op, uMin=S.uMin, uMax=S.uMax, lMin=S.lMin, lMax=S.lMax;
-  if(S.mode==='challenge'){
-    const st=challengeStage(qNum);
-    op=st.op; uMin=st.uMin; uMax=st.uMax; lMin=st.lMin; lMax=st.lMax;
-  } else if(S.mode==='nonbiri'){
-    op='+';
+// ============================================================
+function randInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+
+function makeQuestion(questionNum) {
+  let op, uMin, uMax, lMin, lMax;
+
+  if (S.mode === 'challenge') {
+    const st = challengeStage(questionNum);
+    op = st.op; uMin = st.uMin; uMax = st.uMax; lMin = st.lMin; lMax = st.lMax;
+  } else if (S.mode === 'random') {
+    // たし・ひき・かけをランダム
+    op = ['+', '-', 'x'][Math.floor(Math.random() * 3)];
+    uMin = S.uMin; uMax = S.uMax; lMin = S.lMin; lMax = S.lMax;
+  } else if (S.mode === 'times') {
+    // かけ算: 設定値を使う（デフォルトは1〜10）
+    op = 'x';
+    uMin = S.uMin; uMax = S.uMax; lMin = S.lMin; lMax = S.lMax;
   } else {
-    op={plus:'+',minus:'-',plusminus:'+-',times:'x'}[S.mode];
+    op = { plus: '+', minus: '-', plusminus: '+-' }[S.mode];
+    uMin = S.uMin; uMax = S.uMax; lMin = S.lMin; lMax = S.lMax;
   }
 
-  // たすひく混合ならランダム選択
-  const actualOp = op==='+-' ? (Math.random()<.5?'+':'-') : op;
+  // たすひく混合の場合はランダム選択
+  const actualOp = op === '+-' ? (Math.random() < .5 ? '+' : '-') : op;
 
-  let a=randInt(uMin,uMax), b=randInt(lMin,lMax);
-  if(actualOp==='-'&&a<b){const t=a;a=b;b=t;}
+  let a = randInt(uMin, uMax), b = randInt(lMin, lMax);
+  if (actualOp === '-' && a < b) { const t = a; a = b; b = t; }
 
-  const ans = actualOp==='+'?a+b : actualOp==='-'?a-b : a*b;
+  const ans = actualOp === '+' ? a + b : actualOp === '-' ? a - b : a * b;
   const dig = Math.max(a.toString().length, b.toString().length, ans.toString().length);
 
   // 繰り上がり/繰り下がり解析
-  const ra=a.toString().split('').reverse();
-  const rb=b.toString().split('').reverse();
-  const carry=Array(dig).fill(0);
-  const borrow={slash:Array(dig).fill(false), red:Array(dig).fill(null), top:Array(dig).fill(null)};
-  let hasHint=false;
+  const ra = a.toString().split('').reverse();
+  const rb = b.toString().split('').reverse();
+  const carry = Array(dig).fill(0);
+  const borrow = {
+    slash: Array(dig).fill(false),
+    red:   Array(dig).fill(null),
+    top:   Array(dig).fill(null),
+  };
+  let hasHint = false;
 
-  if(actualOp==='+'){
-    let c=0;
-    for(let i=0;i<dig;i++){
-      const s=parseInt(ra[i]||'0')+parseInt(rb[i]||'0')+c;
-      if(s>=10){c=Math.floor(s/10);if(i+1<dig){carry[i+1]=c;hasHint=true;}}else c=0;
+  if (actualOp === '+') {
+    let c = 0;
+    for (let i = 0; i < dig; i++) {
+      const s = parseInt(ra[i] || '0') + parseInt(rb[i] || '0') + c;
+      if (s >= 10) {
+        c = Math.floor(s / 10);
+        if (i + 1 < dig) { carry[i + 1] = c; hasHint = true; }
+      } else { c = 0; }
     }
-  } else if(actualOp==='-'){
-    const tmp=ra.map(x=>parseInt(x||'0'));
-    for(let i=0;i<dig;i++){
-      if(tmp[i]<parseInt(rb[i]||'0')){
-        borrow.top[i]=10; let j=i+1;
-        while(j<dig){
-          borrow.slash[j]=true;
-          if(tmp[j]>0){tmp[j]--;borrow.red[j]=tmp[j];break;}
-          else{tmp[j]=9;borrow.red[j]=9;j++;}
+  } else if (actualOp === '-') {
+    const tmp = ra.map(x => parseInt(x || '0'));
+    for (let i = 0; i < dig; i++) {
+      if (tmp[i] < parseInt(rb[i] || '0')) {
+        borrow.top[i] = 10;
+        let j = i + 1;
+        while (j < dig) {
+          borrow.slash[j] = true;
+          if (tmp[j] > 0) { tmp[j]--; borrow.red[j] = tmp[j]; break; }
+          else { tmp[j] = 9; borrow.red[j] = 9; j++; }
         }
-        hasHint=true;
+        hasHint = true;
       }
     }
-  } else if(actualOp==='x'){
-    let c=0;
-    for(let i=0;i<dig;i++){
-      const p=parseInt(ra[i]||'0')*b+c;
-      if(p>=10){c=Math.floor(p/10);if(i+1<dig){carry[i+1]=c;hasHint=true;}}else c=0;
+  } else if (actualOp === 'x') {
+    let c = 0;
+    for (let i = 0; i < dig; i++) {
+      const p = parseInt(ra[i] || '0') * b + c;
+      if (p >= 10) {
+        c = Math.floor(p / 10);
+        if (i + 1 < dig) { carry[i + 1] = c; hasHint = true; }
+      } else { c = 0; }
     }
   }
 
-  return{a,b,op:actualOp,ans,dig,carry,borrow,hasHint};
+  return { a, b, op: actualOp, ans, dig, carry, borrow, hasHint };
 }
 
 // ============================================================
 // 筆算描画
 // ============================================================
-function renderHissan(){
-  const q=S.question; if(!q) return;
-  const{a,b,op,dig,carry,borrow}=q;
-  const ra=a.toString().split('').reverse();
-  const rb=b.toString().split('').reverse();
+function renderHissan() {
+  const q = S.question;
+  if (!q) return;
+  const { a, b, op, dig, carry, borrow } = q;
+  const ra = a.toString().split('').reverse();
+  const rb = b.toString().split('').reverse();
 
-  // ドラムのpxサイズ (vwベース、CSS clampと合わせる)
-  const DH = Math.round(Math.min(108, Math.max(56, window.innerWidth*0.14)));
+  const DH = Math.round(Math.min(108, Math.max(56, window.innerWidth * 0.14)));
   const DW = DH;
-
   const opW  = `clamp(46px,11vw,84px)`;
   const celW = `clamp(56px,14vw,108px)`;
   const cols = `${opW} repeat(${dig},${celW})`;
@@ -554,202 +687,280 @@ function renderHissan(){
   let html = `<div class="hissan-grid" style="grid-template-columns:${cols};">`;
 
   // ヒント行
-  if(S.showHint){
-    html+='<div class="h-cell hint"></div>';
-    for(let i=dig-1;i>=0;i--){
-      let h='';
-      if(op==='+'&&carry[i])h=carry[i];
-      else if(op==='-'){if(borrow.top[i])h=borrow.top[i]; else if(borrow.red[i]!==null)h=borrow.red[i];}
-      else if(op==='x'&&carry[i])h=carry[i];
-      html+=`<div class="h-cell hint">${h}</div>`;
+  if (S.showHint) {
+    html += '<div class="h-cell hint"></div>';
+    for (let i = dig - 1; i >= 0; i--) {
+      let h = '';
+      if (op === '+' && carry[i])           h = carry[i];
+      else if (op === '-') {
+        if (borrow.top[i])                  h = borrow.top[i];
+        else if (borrow.red[i] !== null)    h = borrow.red[i];
+      } else if (op === 'x' && carry[i])   h = carry[i];
+      html += `<div class="h-cell hint">${h}</div>`;
     }
   }
 
   // 上段
-  html+='<div class="h-cell op"></div>';
-  for(let i=dig-1;i>=0;i--){
-    const v=ra[i]||'';
-    if(S.showHint&&op==='-'&&borrow.slash[i]){
-      html+=`<div class="h-cell"><span class="slash-wrap"><span class="slashed">${v}</span><span class="slash-line"></span></span></div>`;
-    }else{html+=`<div class="h-cell">${v}</div>`;}
+  html += '<div class="h-cell op"></div>';
+  for (let i = dig - 1; i >= 0; i--) {
+    const v = ra[i] || '';
+    if (S.showHint && op === '-' && borrow.slash[i]) {
+      html += `<div class="h-cell"><span class="slash-wrap"><span class="slashed">${v}</span><span class="slash-line"></span></span></div>`;
+    } else {
+      html += `<div class="h-cell">${v}</div>`;
+    }
   }
 
   // 下段
-  const opChar=op==='x'?'×':op==='+'?'＋':'－';
-  html+=`<div class="h-cell op">${opChar}</div>`;
-  for(let i=dig-1;i>=0;i--) html+=`<div class="h-cell">${rb[i]||''}</div>`;
+  const opChar = op === 'x' ? '×' : op === '+' ? '＋' : '－';
+  html += `<div class="h-cell op">${opChar}</div>`;
+  for (let i = dig - 1; i >= 0; i--) html += `<div class="h-cell">${rb[i] || ''}</div>`;
 
   // 横線
-  html+=`<div class="h-divider"></div>`;
+  html += `<div class="h-divider"></div>`;
 
   // ドラム行
-  html+='<div class="h-cell op"></div>';
-  for(let i=dig-1;i>=0;i--){
-    html+=`<div class="h-cell" style="height:auto;padding:3px 2px;">
+  html += '<div class="h-cell op"></div>';
+  for (let i = dig - 1; i >= 0; i--) {
+    html += `<div class="h-cell" style="height:auto;padding:3px 2px;">
       <div class="drum-wrap" id="drum-${i}" style="width:${DW}px;height:${DH}px;"></div>
     </div>`;
   }
-  html+='</div>';
+  html += '</div>';
 
-  document.getElementById('hissan-card').innerHTML=html;
-  for(let i=0;i<dig;i++) initDrum(i,DH);
+  document.getElementById('hissan-card').innerHTML = html;
+  for (let i = 0; i < dig; i++) initDrum(i, DH);
 
-  const hb=document.getElementById('hint-btn');
-  hb.style.display=q.hasHint?'flex':'none';
-  hb.className='hint-btn'+(S.showHint?' on':'');
+  // ヒント・パスボタン表示
+  const hb = document.getElementById('hint-btn');
+  hb.style.display = q.hasHint ? 'flex' : 'none';
+  hb.className = 'hint-btn' + (S.showHint ? ' on' : '');
+
+  const pb = document.getElementById('pass-btn');
+  pb.style.display = 'inline-block';
 }
 
 // ============================================================
 // ドラム
 // ============================================================
-const CYCLE=11, OFFSET_BASE=CYCLE*2;
-const DLABELS=['－','0','1','2','3','4','5','6','7','8','9'];
-const pmod=(n,m)=>((n%m)+m)%m;
-const v2o =v=>(v===null?0:v+1);
-const o2v =o=>{const n=pmod(o,CYCLE);return n===0?null:n-1;};
+const pmod = (n, m) => ((n % m) + m) % m;
+const v2o  = v  => (v === null ? 0 : v + 1);
+const o2v  = o  => { const n = pmod(o, CYCLE); return n === 0 ? null : n - 1; };
 
-function initDrum(idx, IH){
-  const el=document.getElementById('drum-'+idx);
-  if(!el) return;
-  const total=CYCLE*5;
-  let rows='';
-  for(let i=0;i<total;i++){
-    const lbl=DLABELS[i%CYCLE];
-    rows+=`<div class="drum-item${lbl==='－'?' empty':''}" style="height:${IH}px;">${lbl}</div>`;
+function initDrum(idx, IH) {
+  const el = document.getElementById('drum-' + idx);
+  if (!el) return;
+  const total = CYCLE * 5;
+  let rows = '';
+  for (let i = 0; i < total; i++) {
+    const lbl = DLABELS[i % CYCLE];
+    rows += `<div class="drum-item${lbl === '－' ? ' empty' : ''}" style="height:${IH}px;">${lbl}</div>`;
   }
-  el.innerHTML=`
+  el.innerHTML = `
     <div class="drum-hl" style="height:${IH}px;"></div>
     <div class="drum-ft"></div><div class="drum-fb"></div>
-    <div class="drum-track" style="transform:translateY(${-(OFFSET_BASE+v2o(S.drums[idx]))*IH}px)">${rows}</div>`;
+    <div class="drum-track" style="transform:translateY(${-(OFFSET_BASE + v2o(S.drums[idx])) * IH}px)">${rows}</div>`;
 
-  const track=el.querySelector('.drum-track');
-  let drag=false, sy=0, base=v2o(S.drums[idx]);
+  const track = el.querySelector('.drum-track');
+  let drag = false, sy = 0, base = v2o(S.drums[idx]);
 
-  const gy=e=>e.changedTouches?e.changedTouches[0].clientY:e.touches?e.touches[0].clientY:e.clientY;
-  const ay=(off,anim)=>{
-    track.style.transition=anim?'transform .15s cubic-bezier(.25,.46,.45,.94)':'none';
-    track.style.transform=`translateY(${-(OFFSET_BASE+off)*IH}px)`;
+  const gy = e => e.changedTouches ? e.changedTouches[0].clientY
+                : e.touches        ? e.touches[0].clientY
+                : e.clientY;
+  const ay = (off, anim) => {
+    track.style.transition = anim ? 'transform .15s cubic-bezier(.25,.46,.45,.94)' : 'none';
+    track.style.transform  = `translateY(${-(OFFSET_BASE + off) * IH}px)`;
   };
-  el.addEventListener('mousedown', e=>{e.preventDefault();drag=true;sy=gy(e);});
-  el.addEventListener('mousemove', e=>{if(!drag)return;e.preventDefault();ay(base+(-(gy(e)-sy)/IH),false);});
-  el.addEventListener('mouseup',   e=>{if(!drag)return;done(e);});
-  el.addEventListener('mouseleave',e=>{if(drag)done(e);});
-  el.addEventListener('touchstart',e=>{e.preventDefault();drag=true;sy=gy(e);},{passive:false});
-  el.addEventListener('touchmove', e=>{if(!drag)return;e.preventDefault();ay(base+(-(gy(e)-sy)/IH),false);},{passive:false});
-  el.addEventListener('touchend',  e=>{if(!drag)return;done(e);});
 
-  function done(e){
-    drag=false;
-    const raw=base+(-(gy(e)-sy)/IH);
-    const sn=Math.round(raw), nm=pmod(sn,CYCLE);
-    ay(sn,true);
-    setTimeout(()=>{ay(nm,false);base=nm;},160);
-    S.drums[idx]=o2v(nm);
+  el.addEventListener('mousedown',  e => { e.preventDefault(); drag = true; sy = gy(e); });
+  el.addEventListener('mousemove',  e => { if (!drag) return; e.preventDefault(); ay(base + (-(gy(e) - sy) / IH), false); });
+  el.addEventListener('mouseup',    e => { if (!drag) return; done(e); });
+  el.addEventListener('mouseleave', e => { if (drag) done(e); });
+  el.addEventListener('touchstart', e => { e.preventDefault(); drag = true; sy = gy(e); }, { passive: false });
+  el.addEventListener('touchmove',  e => { if (!drag) return; e.preventDefault(); ay(base + (-(gy(e) - sy) / IH), false); }, { passive: false });
+  el.addEventListener('touchend',   e => { if (!drag) return; done(e); });
+
+  function done(e) {
+    drag = false;
+    const raw = base + (-(gy(e) - sy) / IH);
+    const sn = Math.round(raw), nm = pmod(sn, CYCLE);
+    ay(sn, true);
+    setTimeout(() => { ay(nm, false); base = nm; }, 160);
+    S.drums[idx] = o2v(nm);
   }
 }
 
 // ============================================================
 // タイマー
 // ============================================================
-function stopTick(){if(S.tickTimer){clearTimeout(S.tickTimer);S.tickTimer=null;}}
-function startTick(){
-  stopTick(); S.beatCount=0;
-  document.getElementById('timer-bar').style.width='0%';
-  S.tickTimer=setTimeout(function tick(){
-    S.beatCount++;
-    if(S.beatCount<=10){
-      playTick(1+(S.beatCount-1)*.05);
-      document.getElementById('timer-bar').style.width=(S.beatCount/10*100)+'%';
-      S.tickTimer=setTimeout(tick, S.interval*1000);
-    }else{ onTimeout(); }
-  }, S.interval*1000);
+function stopTick() {
+  if (S.tickTimer) { clearTimeout(S.tickTimer); S.tickTimer = null; }
 }
 
-function onTimeout(){
-  stopTick(); playNG(); flash('red');
-  if(S.mode==='nonbiri'){
-    // のんびり: ロストなし・同じ問題を再挑戦
-    setTimeout(()=>{
-      S.drums=Array(S.question.dig).fill(null);
-      renderHissan(); startTick();
-    },700);
+function startTick() {
+  stopTick();
+  S.beatCount = 0;
+  document.getElementById('timer-bar').style.width = '0%';
+
+  if (S.speed === 'jikkuri') {
+    // じっくり: タイマーバーなし、ループ音のみ（タイムアップなし）
+    startJikkuriLoop();
     return;
   }
-  S.lostCount++; renderHearts();
-  if(S.lostCount>=3){ setTimeout(()=>{playOver();doGameOver();},400); }
-  else              { setTimeout(()=>newQuestion(),800); }
+
+  S.tickTimer = setTimeout(function tick() {
+    S.beatCount++;
+    if (S.beatCount <= 10) {
+      playTick(1 + (S.beatCount - 1) * .05);
+      document.getElementById('timer-bar').style.width = (S.beatCount / 10 * 100) + '%';
+      S.tickTimer = setTimeout(tick, S.interval * 1000);
+    } else {
+      onTimeout();
+    }
+  }, S.interval * 1000);
+}
+
+function onTimeout() {
+  stopTick();
+  playNG();
+  flash('red');
+  // 全モード: タイムアウトしても同じ問題を続ける（ハートは減らない）
+  setTimeout(() => {
+    S.drums = Array(S.question.dig).fill(null);
+    renderHissan();
+    startTick();
+  }, 700);
 }
 
 // ============================================================
 // ゲーム制御
 // ============================================================
-function calcInterval(){
-  if(S.speed==='steady') return 1.5;
-  if(S.speed==='fast')   return 0.75;
-  return Math.max(1.0, 1.5*Math.pow(.92,S.speedLevel-1));
+function calcInterval() {
+  if (S.speed === 'jikkuri') return 999; // 実質無制限
+  if (S.speed === 'dash') {
+    // ダッシュ: ふつうより速い速さからさらに加速
+    return Math.max(0.6, 1.0 * Math.pow(.92, S.speedLevel - 1));
+  }
+  // ふつう: 1.5秒から加速
+  return Math.max(1.0, 1.5 * Math.pow(.92, S.speedLevel - 1));
 }
-function isVarSpeed(){ return S.speed==='normal'; }
-function usesLimit(){  return S.speed!=='normal' && S.mode!=='challenge'; }
 
-function startGame(){
+function isVarSpeed() { return S.speed === 'normal' || S.speed === 'dash'; }
+function usesLimit()  { return S.speed !== 'normal' && S.mode !== 'challenge'; }
+
+// かけ算のデフォルト設定
+const DEFAULT_RANGES = {
+  times: { uMin: 1, uMax: 10, lMin: 1, lMax: 9 },
+  default: { uMin: 10, uMax: 30, lMin: 1, lMax: 9 },
+};
+
+function applyDefaultRange() {
+  const r = (S.mode === 'times') ? DEFAULT_RANGES.times : DEFAULT_RANGES.default;
+  S.uMin = r.uMin; S.uMax = r.uMax;
+  S.lMin = r.lMin; S.lMax = r.lMax;
+  document.getElementById('inp-uMin').value = S.uMin;
+  document.getElementById('inp-uMax').value = S.uMax;
+  document.getElementById('inp-lMin').value = S.lMin;
+  document.getElementById('inp-lMax').value = S.lMax;
+}
+
+function startGame() {
   initAudio();
-  // のんびりモードは設定を強制上書き
-  if(S.mode==='nonbiri'){
-    S.speed='steady'; S.questionLimit=10; S.showBar=false;
-    buildSpeedRow(); setBarVis(false);
-  }
-  S.score=0; S.lostCount=0; S.speedLevel=1;
-  S.interval=calcInterval(); S.isCleared=false;
+  S.score       = 0;
+  S.questionNum = 0;
+  S.lostCount   = 0;
+  S.speedLevel  = 1;
+  S.interval    = calcInterval();
+  S.isCleared   = false;
+  S.okLocked    = false;
+
   showScreen('game');
-  document.getElementById('timer-bar-wrap').style.display=S.showBar?'block':'none';
-  renderHearts(); renderScore();
-  setTimeout(newQuestion,100);
+
+  // じっくり: タイマーバーなし・ハートなし
+  const isJikkuri = S.speed === 'jikkuri';
+  document.getElementById('timer-bar-wrap').style.display =
+    (S.showBar && !isJikkuri) ? 'block' : 'none';
+
+  renderHearts();
+  renderScore();
+  setTimeout(newQuestion, 100);
 }
 
-function newQuestion(){
+function newQuestion() {
   stopTick();
-  S.question=makeQuestion(S.score+1);
-  S.drums=Array(S.question.dig).fill(null);
-  S.showHint=false;
-  renderHissan(); startTick();
+  stopJikkuriLoop();
+  S.questionNum++;
+  S.question   = makeQuestion(S.questionNum);
+  S.drums      = Array(S.question.dig).fill(null);
+  S.showHint   = false;
+  S.okLocked   = false;
+  renderHissan();
+  renderScore();
+  startTick();
 }
 
-function handleOK(){
-  if(!S.question) return;
-  let ans=0, hit=false;
-  for(let i=0;i<S.question.dig;i++){
-    if(S.drums[i]!==null){hit=true; ans+=S.drums[i]*Math.pow(10,i);}
-  }
-  if(!hit) return;
+function handleOK() {
+  if (!S.question || S.okLocked) return;
 
-  if(ans===S.question.ans){
-    stopTick(); playOK(); flash('green');
+  let ans = 0, hit = false;
+  for (let i = 0; i < S.question.dig; i++) {
+    if (S.drums[i] !== null) { hit = true; ans += S.drums[i] * Math.pow(10, i); }
+  }
+  if (!hit) return;
+
+  if (ans === S.question.ans) {
+    S.okLocked = true;  // 連打防止
+    stopTick();
+    stopJikkuriLoop();
+    playOK();
+    flash('green');
     S.score++;
-    if(isVarSpeed()){S.speedLevel++; S.interval=calcInterval();}
+    if (isVarSpeed()) { S.speedLevel++; S.interval = calcInterval(); }
     renderScore();
-    const lim=usesLimit()?S.questionLimit:null;
-    setTimeout(()=>{
-      if(lim!==null&&S.score>=lim){playClear();S.isCleared=true;doGameOver();}
-      else newQuestion();
-    },650);
-  }else{
-    playNG(); flash('red');
+
+    const lim = usesLimit() ? S.questionLimit : null;
+    setTimeout(() => {
+      if (lim !== null && S.score >= lim) {
+        playClear(); S.isCleared = true; doGameOver();
+      } else if (S.mode === 'challenge' && S.questionNum >= S.questionLimit) {
+        playClear(); S.isCleared = true; doGameOver();
+      } else {
+        newQuestion();
+      }
+    }, 650);
+  } else {
+    playNG();
+    flash('red');
   }
 }
 
-function toggleHint(){ S.showHint=!S.showHint; renderHissan(); }
-
-function doGameOver(){
+function handlePass() {
+  if (!S.question || S.okLocked) return;
   stopTick();
-  document.getElementById('go-score').textContent=S.score;
-  if(S.isCleared){
-    document.getElementById('go-emoji').textContent='🎉';
-    document.getElementById('go-title').textContent='ぜんぶできた！';
-    document.getElementById('go-sub').textContent=S.questionLimit+'問クリア！';
-  }else{
-    document.getElementById('go-emoji').textContent='😊';
-    document.getElementById('go-title').textContent='がんばったね';
-    document.getElementById('go-sub').textContent='';
+  stopJikkuriLoop();
+  flash('red');
+  setTimeout(() => newQuestion(), 400);
+}
+
+function toggleHint() {
+  S.showHint = !S.showHint;
+  renderHissan();
+}
+
+function doGameOver() {
+  stopTick();
+  stopJikkuriLoop();
+  document.getElementById('go-score').textContent = S.score;
+  const lim = usesLimit() ? S.questionLimit
+            : (S.mode === 'challenge' ? S.questionLimit : null);
+  if (S.isCleared) {
+    document.getElementById('go-emoji').textContent = '🎉';
+    document.getElementById('go-title').textContent = 'ぜんぶできた！';
+    document.getElementById('go-sub').textContent   = lim + '問クリア！';
+  } else {
+    document.getElementById('go-emoji').textContent = '😊';
+    document.getElementById('go-title').textContent = 'がんばったね';
+    document.getElementById('go-sub').textContent   = '';
   }
   showScreen('gameover');
 }
@@ -757,53 +968,62 @@ function doGameOver(){
 // ============================================================
 // 表示更新
 // ============================================================
-function renderHearts(){
-  const el=document.getElementById('hearts'); el.innerHTML='';
-  if(S.mode==='nonbiri') return; // のんびりはハートなし
-  for(let i=1;i<=3;i++){
-    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('class','heart'); svg.setAttribute('viewBox','0 0 20 20');
-    svg.setAttribute('fill',i<=(3-S.lostCount)?'#FFB3C6':'#DDD6C8');
-    svg.innerHTML='<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>';
+function renderHearts() {
+  const el = document.getElementById('hearts');
+  el.innerHTML = '';
+  // じっくり: ハートなし
+  if (S.speed === 'jikkuri') return;
+  for (let i = 1; i <= 3; i++) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'heart');
+    svg.setAttribute('viewBox', '0 0 20 20');
+    svg.setAttribute('fill', i <= (3 - S.lostCount) ? '#FFB3C6' : '#DDD6C8');
+    svg.innerHTML = '<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>';
     el.appendChild(svg);
   }
 }
-function renderScore(){
-  const lim=usesLimit()?S.questionLimit:null;
-  document.getElementById('score-main').innerHTML=
-    S.score+'<span style="font-size:.78rem;color:#94a3b8;margin-left:2px">問</span>';
-  document.getElementById('score-limit').textContent=lim!==null?'/ '+lim+'問':'';
+
+function renderScore() {
+  const current = S.questionNum;
+  const lim     = S.mode === 'challenge' ? S.questionLimit
+                : usesLimit()            ? S.questionLimit
+                : null;
+  document.getElementById('score-main').innerHTML =
+    current + '<span style="font-size:.78rem;color:#94a3b8;margin-left:2px">問目</span>';
+  document.getElementById('score-limit').textContent =
+    lim !== null ? '/ ' + lim + '問' : '';
 }
 
 // ============================================================
 // 設定UI
 // ============================================================
-function chNum(k,d){
-  const el=document.getElementById('inp-'+k);
-  let v=Math.max(1,Math.min(999,(parseInt(el.value)||1)+d));
-  el.value=v; S[k]=v; clampRange();
+function chNum(k, d) {
+  const el = document.getElementById('inp-' + k);
+  let v = Math.max(1, Math.min(999, (parseInt(el.value) || 1) + d));
+  el.value = v; S[k] = v; clampRange();
 }
-function syncNum(k){
-  const v=parseInt(document.getElementById('inp-'+k).value);
-  if(!isNaN(v)) S[k]=Math.max(1,Math.min(999,v));
+function syncNum(k) {
+  const v = parseInt(document.getElementById('inp-' + k).value);
+  if (!isNaN(v)) S[k] = Math.max(1, Math.min(999, v));
   clampRange();
 }
-function clampRange(){
-  if(S.uMin>S.uMax){S.uMax=S.uMin;document.getElementById('inp-uMax').value=S.uMax;}
-  if(S.lMin>S.lMax){S.lMax=S.lMin;document.getElementById('inp-lMax').value=S.lMax;}
+function clampRange() {
+  if (S.uMin > S.uMax) { S.uMax = S.uMin; document.getElementById('inp-uMax').value = S.uMax; }
+  if (S.lMin > S.lMax) { S.lMax = S.lMin; document.getElementById('inp-lMax').value = S.lMax; }
 }
-function setBarVis(v){
-  S.showBar=v;
-  document.getElementById('tbtn-bar-on').className='tog-btn'+(v?' on':'');
-  document.getElementById('tbtn-bar-off').className='tog-btn'+(!v?' on':'');
+function setBarVis(v) {
+  S.showBar = v;
+  document.getElementById('tbtn-bar-on').className  = 'tog-btn' + (v  ? ' on' : '');
+  document.getElementById('tbtn-bar-off').className = 'tog-btn' + (!v ? ' on' : '');
 }
-function buildQLimitRow(){
-  const row=document.getElementById('qlimit-row'); row.innerHTML='';
-  [5,10,15,20,null].forEach(n=>{
-    const b=document.createElement('button');
-    b.className='qlimit-btn'+(S.questionLimit===n?' on':'');
-    b.textContent=n===null?'∞':n+'問';
-    b.onclick=()=>{S.questionLimit=n; buildQLimitRow();};
+function buildQLimitRow() {
+  const row = document.getElementById('qlimit-row');
+  row.innerHTML = '';
+  [5, 10, 15, 20, null].forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'qlimit-btn' + (S.questionLimit === n ? ' on' : '');
+    b.textContent = n === null ? '∞' : n + '問';
+    b.onclick = () => { S.questionLimit = n; buildQLimitRow(); };
     row.appendChild(b);
   });
 }
@@ -811,17 +1031,23 @@ function buildQLimitRow(){
 // ============================================================
 // 速度ボタン
 // ============================================================
-function setSpeed(sp){
-  S.speed=sp;
-  buildSpeedRow(); buildQLimitRow();
+function setSpeed(sp) {
+  S.speed = sp;
+  buildSpeedRow();
+  buildQLimitRow();
 }
-function buildSpeedRow(){
-  const row=document.getElementById('speed-row'); row.innerHTML='';
-  [{id:'steady',l:'一定'},{id:'normal',l:'普通'},{id:'fast',l:'倍速'}].forEach(sp=>{
-    const b=document.createElement('button');
-    b.className='speed-btn'+(S.speed===sp.id?' on':'');
-    b.textContent=sp.l;
-    b.onclick=()=>setSpeed(sp.id);
+function buildSpeedRow() {
+  const row = document.getElementById('speed-row');
+  row.innerHTML = '';
+  [
+    { id: 'jikkuri', l: 'じっくり' },
+    { id: 'normal',  l: 'ふつう'   },
+    { id: 'dash',    l: 'ダッシュ' },
+  ].forEach(sp => {
+    const b = document.createElement('button');
+    b.className = 'speed-btn' + (S.speed === sp.id ? ' on' : '');
+    b.textContent = sp.l;
+    b.onclick = () => setSpeed(sp.id);
     row.appendChild(b);
   });
 }
@@ -829,28 +1055,21 @@ function buildSpeedRow(){
 // ============================================================
 // モードボタン
 // ============================================================
-// 順序: たす・ひく・たすひく・かける・のんびり・チャレンジ
-// デフォルト問題数: チャレンジ→null(∞)、それ以外→15
-const MODES=[
-  {id:'plus',      sub:'＋',  l:'たす'},
-  {id:'minus',     sub:'－',  l:'ひく'},
-  {id:'plusminus', sub:'＋－',l:'たすひく'},
-  {id:'times',     sub:'×',  l:'かける'},
-  {id:'nonbiri',   sub:'〜',  l:'のんびり'},
-  {id:'challenge', sub:'↑',  l:'チャレンジ'},
-];
-function setMode(id){
-  S.mode=id;
-  S.questionLimit = (id==='challenge') ? null : 15;
-  buildModeGrid(); buildQLimitRow();
+function setMode(id) {
+  S.mode = id;
+  S.questionLimit = (id === 'challenge') ? 15 : 10;
+  applyDefaultRange();
+  buildModeGrid();
+  buildQLimitRow();
 }
-function buildModeGrid(){
-  const grid=document.getElementById('mode-grid'); grid.innerHTML='';
-  MODES.forEach(m=>{
-    const b=document.createElement('button');
-    b.className='mode-btn'+(S.mode===m.id?' selected':'');
-    b.innerHTML=`<span class="sub">${m.sub}</span><span>${m.l}</span>`;
-    b.onclick=()=>setMode(m.id);
+function buildModeGrid() {
+  const grid = document.getElementById('mode-grid');
+  grid.innerHTML = '';
+  MODES.forEach(m => {
+    const b = document.createElement('button');
+    b.className = 'mode-btn' + (S.mode === m.id ? ' selected' : '');
+    b.innerHTML = `<span class="sub">${m.sub}</span><span>${m.l}</span>`;
+    b.onclick = () => setMode(m.id);
     grid.appendChild(b);
   });
 }
@@ -858,10 +1077,10 @@ function buildModeGrid(){
 // ============================================================
 // 初期化
 // ============================================================
-document.getElementById('btn-start').onclick       =()=>{initAudio();startGame();};
-document.getElementById('btn-to-settings').onclick =()=>showScreen('settings');
-document.getElementById('btn-back-settings').onclick=()=>showScreen('title');
-document.getElementById('btn-to-title').onclick    =()=>{stopTick();showScreen('title');};
+document.getElementById('btn-start').onclick        = () => { initAudio(); startGame(); };
+document.getElementById('btn-to-settings').onclick  = () => showScreen('settings');
+document.getElementById('btn-back-settings').onclick= () => showScreen('title');
+document.getElementById('btn-to-title').onclick     = () => { stopTick(); stopJikkuriLoop(); showScreen('title'); };
 
 buildSpeedRow();
 buildModeGrid();
