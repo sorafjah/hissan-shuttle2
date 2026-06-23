@@ -914,11 +914,18 @@ function newQuestion() {
 function handleOK() {
   if (!S.question || S.okLocked) return;
 
-  let ans = 0, hit = false;
-  for (let i = 0; i < S.question.dig; i++) {
-    if (S.drums[i] !== null) { hit = true; ans += S.drums[i] * Math.pow(10, i); }
+  // 答えの実際の桁数（例: 答えが9なら1桁、答えが60なら2桁）
+  const ansDig = S.question.ans.toString().length;
+
+  // 答えの桁数分だけ入力済みか確認（上位の余り桁は問わない）
+  for (let i = 0; i < ansDig; i++) {
+    if (S.drums[i] === null) return;
   }
-  if (!hit) return;
+
+  let ans = 0;
+  for (let i = 0; i < S.question.dig; i++) {
+    ans += (S.drums[i] ?? 0) * Math.pow(10, i);
+  }
 
   if (ans === S.question.ans) {
     S.okLocked = true;  // 連打防止
