@@ -602,7 +602,12 @@ function makeQuestion(questionNum) {
   } else if (S.mode === 'random') {
     // たし・ひき・かけをランダム
     op = ['+', '-', 'x'][Math.floor(Math.random() * 3)];
-    uMin = S.uMin; uMax = S.uMax; lMin = S.lMin; lMax = S.lMax;
+    if (op === 'x') {
+      // かけ算のときは上の段を1〜12に固定
+      uMin = 1; uMax = 12; lMin = S.lMin; lMax = S.lMax;
+    } else {
+      uMin = S.uMin; uMax = S.uMax; lMin = S.lMin; lMax = S.lMax;
+    }
   } else if (S.mode === 'times') {
     // かけ算: 設定値を使う（デフォルトは1〜10）
     op = 'x';
