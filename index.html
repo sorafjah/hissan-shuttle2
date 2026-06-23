@@ -511,42 +511,9 @@ function playTick(pitch) {
   o.start(t + .06); o.stop(t + .41);
 }
 
-// じっくりモード: シンプルなリズムループ
+// じっくりモード: 無音
 function startJikkuriLoop() {
-  stopJikkuriLoop();
-  if (!AC) return;
-
-  const go = () => {
-    let beat = 0;
-    const intervalMs = (60 / 76) * 1000;
-    const pattern = [1, 0, 0.6, 0];
-
-    function tick() {
-      if (!AC) return;
-      const t = AC.currentTime;
-      const vol = pattern[beat % pattern.length];
-      if (vol > 0) {
-        const freq = (beat % 4 === 0) ? 220 : 165;
-        // beepを直接展開して確実に鳴らす
-        const o = AC.createOscillator(), g = AC.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(freq, t);
-        g.gain.setValueAtTime(vol * 0.12, t);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
-        o.connect(g); g.connect(AC.destination);
-        o.start(t); o.stop(t + 0.09);
-      }
-      beat++;
-      jikkuriLoopNode = setTimeout(tick, intervalMs);
-    }
-    tick(); // 最初の1発をすぐ鳴らす
-  };
-
-  if (AC.state !== 'running') {
-    AC.resume().then(go);
-  } else {
-    go();
-  }
+  // 何もしない
 }
 
 function stopJikkuriLoop() {
@@ -885,7 +852,8 @@ function calcInterval() {
 }
 
 function isVarSpeed() { return S.speed === 'normal' || S.speed === 'dash'; }
-function usesLimit()  { return S.speed !== 'normal' && S.mode !== 'challenge'; }
+// ランダムは全スピードで問題数を使う
+function usesLimit()  { return S.speed !== 'normal' || S.mode === 'random'; }
 
 // かけ算のデフォルト設定
 const DEFAULT_RANGES = {
@@ -957,11 +925,11 @@ function handleOK() {
     if (isVarSpeed()) { S.speedLevel++; S.interval = calcInterval(); }
     renderScore();
 
-    const lim = usesLimit() ? S.questionLimit : null;
+    const lim = (S.mode === 'challenge') ? S.questionLimit
+              : usesLimit()              ? S.questionLimit
+              : null;
     setTimeout(() => {
-      if (lim !== null && S.score >= lim) {
-        playClear(); S.isCleared = true; doGameOver();
-      } else if (S.mode === 'challenge' && S.questionNum >= S.questionLimit) {
+      if (lim !== null && S.questionNum >= lim) {
         playClear(); S.isCleared = true; doGameOver();
       } else {
         newQuestion();
@@ -1034,10 +1002,8 @@ function renderHearts() {
 
 function renderScore() {
   const current = S.questionNum;
-  // ランダムはjikkuri/dashのとき問題数あり、normalは無制限
-  const lim = S.mode === 'challenge' ? S.questionLimit
-            : usesLimit()            ? S.questionLimit
-            : (S.mode === 'random' && S.speed !== 'normal') ? S.questionLimit
+  const lim = (S.mode === 'challenge') ? S.questionLimit
+            : usesLimit()              ? S.questionLimit
             : null;
   document.getElementById('score-main').innerHTML =
     current + '<span style="font-size:.78rem;color:#94a3b8;margin-left:2px">問目</span>';
@@ -1108,7 +1074,7 @@ function buildSpeedRow() {
 // ============================================================
 function setMode(id) {
   S.mode = id;
-  S.questionLimit = (id === 'challenge') ? 15 : 10;
+  S.questionLimit = (id === 'challenge' || id === 'random') ? 15 : 10;
   applyDefaultRange();
   buildModeGrid();
   buildQLimitRow();
